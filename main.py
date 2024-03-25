@@ -39,22 +39,35 @@ def download_file(ext: str):
         print('ftp error: ',e)
     except Exception as e:
         print("Error: ",e)
-def upload_file(filename: str,ip_addr):
+def upload_file(filename, ip_addr):
     try:
-        with open(filename,'rb'):
+        with open(filename, 'rb') as file:
             pass
     except(FileNotFoundError):
-        print("Error: file not found")
+        print("File does not exists")
         return
-    try:
-        ftp=ftplib.FTP(ip_addr)
-        ftp.login('ftpuser','student')
-        ftp.cwd='cit383F2023'
-        with open(filename,'rb') as file:
-            ftp.storbinary('STOR'+filename,file )
 
-    except Exception as e:
-        print(e)
+
+    remote_dir = 'cit383F2023'
+    ftp = None
+
+    try:
+        
+        ftp = ftplib.FTP(ip_addr)
+        ftp.login('ftpuser', 'student')
+        ftp.cwd(remote_dir)
+
+        with open(filename, 'rb') as file:
+            ftp.storbinary('STOR ' + filename, file)
+
+        print(filename + ' uploaded successfully')
+    except ftplib.all_errors as e:
+        print("Error " + str(e))
+
+    finally:
+        if ftp is not None:
+            ftp.quit()
+
 def execute_command():
     print("this just ran")
     try:
