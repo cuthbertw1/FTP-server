@@ -1,6 +1,8 @@
 #!/usr/bin/python
 import argparse as ap
 import ftplib
+import os.path
+
 
 def setup_parser() -> ap.ArgumentParser:
     parser = ap.ArgumentParser(
@@ -37,11 +39,37 @@ def download_file(ext: str):
         print('ftp error: ',e)
     except Exception as e:
         print("Error: ",e)
-def upload_file(filename: str):
-    pass
+def upload_file(filename: str,ip_addr):
+    try:
+        with open(filename,'rb'):
+            pass
+    except(FileNotFoundError):
+        print("Error: file not found")
+        return
+    try:
+        ftp=ftplib.FTP(ip_addr)
+        ftp.login('ftpuser','student')
+        ftp.cwd='cit383F2023'
+        with open(filename,'rb') as file:
+            ftp.storbinary('STOR'+filename,file )
 
+    except Exception as e:
+        print(e)
 def execute_command():
-    pass
+    print("this just ran")
+    try:
+        ftp = ftplib.FTP('10.2.59.137')
+
+        ftp.login('ftpuser', 'student')
+        ftp.cwd('/home/student')
+        s_cmd_stat=ftp.sendcmd('PWD')
+        print(s_cmd_stat)
+        files = ftp.nlst()
+
+    except ftplib.error_perm as e:
+        print('ftp error: ',e)
+    except Exception as e:
+        print("Error: ",e)
 
 def main():
     my_parser = setup_parser()
@@ -54,7 +82,7 @@ def main():
         exit(1)
 
     if args.fileName:
-        upload_file(args.fileName)
+        upload_file(args.fileName,args.FTP_SERVER_ID)
 
     if args.fileExt:
         download_file(args.fileExt)
