@@ -22,13 +22,21 @@ def setup_parser() -> ap.ArgumentParser:
     return parser
 
 def download_file(ext: str):
-    ftp = ftplib.FTP('10.2.59.137')
-    ftp.login('student', 'student')
-    ftp.cwd('/home/student')
-    files = ftp.nlst()
-    for file in files:
-        print(file)
+    print("this just ran")
+    try:
+        ftp = ftplib.FTP('10.2.59.137')
 
+        ftp.login('student', 'student')
+        ftp.cwd('/home/student')
+
+        files = ftp.nlst()
+        for file in files:
+
+            print(file)
+    except ftplib.error_perm as e:
+        print('ftp error: ',e)
+    except Exception as e:
+        print("Error: ",e)
 def upload_file(filename: str):
     pass
 
