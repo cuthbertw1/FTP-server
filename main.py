@@ -7,7 +7,7 @@ import os.path
 def setup_parser() -> ap.ArgumentParser:
     parser = ap.ArgumentParser(
         add_help=True,
-        description="This code does blah",
+        description="This code allows the transfer of files via FTP",
         usage="./lab9 SERVER_IP_ADD []",
         prog="FTP_FILE_DOWNLOADER"
     )
@@ -24,7 +24,7 @@ def setup_parser() -> ap.ArgumentParser:
     return parser
 
 def download_file(ext: str):
-    print("this just ran")
+
     try:
         ftp = ftplib.FTP('10.2.59.137')
 
@@ -39,12 +39,13 @@ def download_file(ext: str):
         print('ftp error: ',e)
     except Exception as e:
         print("Error: ",e)
-def upload_file(filename, ip_addr):
+def upload_file(filename:str, ip_addr):
+
     try:
-        with open(filename, 'rb') as file:
+        with open(filename, 'rb') as file:          # checks to see if file exists
             pass
     except(FileNotFoundError):
-        print("File does not exists")
+        print("Error: file does not exist")
         return
 
 
@@ -52,28 +53,28 @@ def upload_file(filename, ip_addr):
     ftp = None
 
     try:
-        
-        ftp = ftplib.FTP(ip_addr)
+
+        ftp = ftplib.FTP(ip_addr)                                   #ftp connection
         ftp.login('ftpuser', 'student')
         ftp.cwd(remote_dir)
 
         with open(filename, 'rb') as file:
-            ftp.storbinary('STOR ' + filename, file)
+            ftp.storbinary('STOR ' + filename, file)        # upload
 
         print(filename + ' uploaded successfully')
-    except ftplib.all_errors as e:
+    except Exception as e:
         print("Error " + str(e))
 
     finally:
         if ftp is not None:
-            ftp.quit()
+            ftp.quit()              #close connection
 
-def execute_command():
-    print("this just ran")
+def execute_command(ip_addr):
+
     try:
-        ftp = ftplib.FTP('10.2.59.137')
+        ftp = ftplib.FTP(ip_addr)
 
-        ftp.login('ftpuser', 'student')
+        ftp.login('ftpuser', 'student')         # ftp connection
         ftp.cwd('/home/student')
         s_cmd_stat=ftp.sendcmd('PWD')
         print(s_cmd_stat)
