@@ -23,18 +23,22 @@ def setup_parser() -> ap.ArgumentParser:
 
     return parser
 
-def download_file(ext: str):
+def download_file(ext: str,ip_addr):
 
     try:
-        ftp = ftplib.FTP('10.2.59.137')
+        ftp = ftplib.FTP(ip_addr)
 
-        ftp.login('student', 'student')
-        ftp.cwd('/home/student')
+        ftp.login('ftpuser', 'student')
+        ftp.cwd('/home/ftpuser/cit383F2023')
 
         files = ftp.nlst()
         for file in files:
-
-            print(file)
+            if file.endswith(ext):
+                print("downloading"+file)
+                save_path=os.path.join(os.getcwd(),file)
+                with open(save_path,'wb') as f:
+                    ftp.retrbinary('RETR '+file,f.write)
+                print(file+"downloaded successfully")
     except ftplib.error_perm as e:
         print('ftp error: ',e)
     except Exception as e:
@@ -102,7 +106,7 @@ def main():
         download_file(args.fileExt)
 
     if args.fileType:
-        execute_command()
+        execute_command(args.FTP_SERVER_ID)
 
     print("The program is done.... have a great day!")
 
