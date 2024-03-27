@@ -43,6 +43,10 @@ def download_file(ext: str,ip_addr):
         print('ftp error: ',e)
     except Exception as e:
         print("Error: ",e)
+    finally:
+        if ftp:
+            ftp.quit()
+
 def upload_file(filename:str, ip_addr):
 
     try:
@@ -70,25 +74,34 @@ def upload_file(filename:str, ip_addr):
         print("Error " + str(e))
 
     finally:
-        if ftp is not None:
+        if ftp:
             ftp.quit()              #close connection
 
-def execute_command(ip_addr):
+def execute_command(ip_addr,type):
 
     try:
         ftp = ftplib.FTP(ip_addr)
 
         ftp.login('ftpuser', 'student')         # ftp connection
         ftp.cwd('/home/ftpuser/citF2023')
-        s_cmd_stat=ftp.sendcmd('PWD')
-        print(s_cmd_stat)
-        files = ftp.nlst()
 
+        files = ftp.nlst()                      # list files
+        correctFiles=[]
+        for file in files:
+            if file.endswith(type):
+                correctFiles.append(file)       # checks files against given extension
+        if correctFiles:
+            for file in correctFiles:           # prints files
+                print(file)
+        else:
+            print('no files with specified extension found')
     except ftplib.error_perm as e:
         print('ftp error: ',e)
     except Exception as e:
         print("Error: ",e)
-
+    finally:
+        if ftp :
+            ftp.quit()
 def main():
     my_parser = setup_parser()
 
@@ -106,7 +119,7 @@ def main():
         download_file(args.fileExt)
 
     if args.fileType:
-        execute_command(args.FTP_SERVER_ID)
+        execute_command(args.FTP_SERVER_ID,args.fileType)
 
     print("The program is done.... have a great day!")
 
