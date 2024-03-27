@@ -28,13 +28,13 @@ def download_file(ext: str,ip_addr):
     try:
         ftp = ftplib.FTP(ip_addr)
 
-        ftp.login('ftpuser', 'student')
+        ftp.login('ftpuser', 'student')     # setup and directory information
         ftp.cwd('/home/ftpuser/cit383F2023')
 
         files = ftp.nlst()
         for file in files:
             if file.endswith(ext):
-                print("downloading"+file)
+                print("downloading"+file)                   #download files with ext specified
                 save_path=os.path.join(os.getcwd(),file)
                 with open(save_path,'wb') as f:
                     ftp.retrbinary('RETR '+file,f.write)
@@ -79,7 +79,7 @@ def execute_command(ip_addr):
         ftp = ftplib.FTP(ip_addr)
 
         ftp.login('ftpuser', 'student')         # ftp connection
-        ftp.cwd('/home/student')
+        ftp.cwd('/home/ftpuser/citF2023')
         s_cmd_stat=ftp.sendcmd('PWD')
         print(s_cmd_stat)
         files = ftp.nlst()
