@@ -23,7 +23,7 @@ def setup_parser() -> ap.ArgumentParser:
 
     return parser
 
-def download_file(ext: str,ip_addr):
+def download_file(ip_addr,ext: str):
 
     ftp=None
     try:
@@ -48,7 +48,7 @@ def download_file(ext: str,ip_addr):
         if ftp:
             ftp.quit()
 
-def upload_file(filename:str, ip_addr):
+def upload_file(ip_addr,filename:str):
 
     try:
         with open(filename, 'rb') as file:          # checks to see if file exists
@@ -114,10 +114,10 @@ def main():
         exit(1)
 
     if args.fileName:
-        upload_file(args.fileName,args.FTP_SERVER_ID)
+        upload_file(args.FTP_SERVER_ID,args.fileName)
 
     if args.fileExt:
-        download_file(args.fileExt)
+        download_file(args.FTP_SERVER_ID,args.fileExt)
 
     if args.fileType:
         execute_command(args.FTP_SERVER_ID,args.fileType)
