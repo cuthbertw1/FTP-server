@@ -25,6 +25,7 @@ def setup_parser() -> ap.ArgumentParser:
 
 def download_file(ext: str,ip_addr):
 
+    ftp=None
     try:
         ftp = ftplib.FTP(ip_addr)
 
@@ -78,7 +79,7 @@ def upload_file(filename:str, ip_addr):
             ftp.quit()              #close connection
 
 def execute_command(ip_addr,type):
-
+    ftp=None
     try:
         ftp = ftplib.FTP(ip_addr)
 
